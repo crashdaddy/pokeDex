@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+
+#nav {
+    width:10%;
+    float: left;
+    margin-left:10px;
+}
+
+#output {
+    float: left;
+    width: auto;
+    width: 60%;
+}
+
+#details {
+    width:30%;
+    vertical-align: top;
+    overflow-wrap: break-word;
+    position: fixed;
+    top: 20px;
+    left: 70%;
+    bottom: 0;
+    overflow-y: scroll;
+    margin: 4px;
+ }
+
+ /* Hide scrollbar for Chrome, Safari and Opera */
+#details::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE and Edge */
+#details {
+    -ms-overflow-style: none;
+}
+
+ #detailsText {
+    clear: both;
+    margin-top: 20px;
+ }
+
+#smallPix {
+    margin-bottom: 20px;
+    display: inline-block;
+}
+
+#name {
+    font-size: x-large;
+    color: blue;
+    width: 100%;
+}
+
+#bigPicture {
+    height:350px;
+    width: 350px;
+}
+</style>
+</head>
+<body>
+    <div id="nav"><select id="selectBox" style="width: 100%;" onchange="getPokemonByType(this.value)"></select></div>
+    <div id="output"></div>
+    <div id="details">
+        <div id="name"></div>
+        <div id="bigPicture"></div>
+        <div id="smallPix"></div>
+        <div id="moveText"></div>
+        <div id="detailsText"></div>
+        <div id="evolution"></div>
+    </div>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.11/lodash.min.js"></script> -->
+    <script src="main.js">
+        
+    </script>   
+
+          
+</body>
+</html>
