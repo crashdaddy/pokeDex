@@ -1,8 +1,6 @@
 
 let pokemonCollection = [];
 
-let pokemonTypes = [];
-
 let HTMLstr = "";
 
 const getRandomInt = (min, max) => {
@@ -22,7 +20,6 @@ const getAllTypes = () => {
     .then(res=> res.json())
     .then(pokemonType => {
         pokemonType.results.forEach(function(typeOfPokemon){
-        pokemonTypes.push(typeOfPokemon);
         loadSelectBox(typeOfPokemon)
     })
   })
@@ -71,8 +68,12 @@ const showEvolution = (speciesUrl) => {
 
 const getPokemonByType = (typeURL) => {
   if (typeURL==="default") {
-    document.getElementById("output").innerHTML=`<img src="img/PSMD_poster.png">`;
+    document.body.style.backgroundColor= "none";
+    document.body.style.backgroundImage = "url(img/bg.png)";
+    document.getElementById("output").innerHTML="";
   } else {
+    document.body.style.backgroundImage="none";
+    document.body.style.backgroundColor="#e6e6e6";
     fetch(typeURL)
       .then(res => res.json())
       .then(pokemonType => {
@@ -165,7 +166,7 @@ const getPokemonByType = (typeURL) => {
 
       showEvolution(currentPokemon.species.url);
 
-      detailsHTML +=  `</div><div style="clear:both;font-size:24px;margin-top:20px;">Evolutions:</div>`;
+      detailsHTML +=  `</div><div style="clear:both;font-size:24px;margin-top:20px;font-family:pokemonSolid;">Evolutions:</div>`;
  
     detailsText.innerHTML = detailsHTML;
   }
@@ -177,21 +178,13 @@ const fetchPokemonData = (pokemon) => {
     .then(response => response.json())  
     .then(pokeData =>
     {   
-      pokemonCollection.push(pokeData);
+        pokemonCollection.push(pokeData);
         if(pokeData.sprites.front_default){
         HTMLstr += `<div id="${pokeData.id}" onclick="showDetails(${pokeData.id})" style="float:left;"><img src="${pokeData.sprites.front_default}" style="max-height:96px;"></div>`;
         }
       document.getElementById("output").innerHTML=HTMLstr;
   })}
     
-// loops through the enemies list
-// and gets the data for each one 
-const getAllEnemies = () => {
-    for (let i = 0; i< 2;i++){
-      getPokemonByType(i);
-    }
-};
-
 const loadSelectBox = (pokemon) => {
   let select = document.getElementById("selectBox");
       select.append(new Option(pokemon.name, pokemon.url));

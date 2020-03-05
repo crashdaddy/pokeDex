@@ -4,6 +4,10 @@ Making a Pokemon Pokedex using the pokeAPI (https://pokeapi.co/)
 
 Using fetch chaining to retrieve data from nested endpoints.
 
+Added gradients to output containers
+
+added background image
+
 TODO: 
 
    change listbox into individual buttons (blue w/ pokemon font text)
