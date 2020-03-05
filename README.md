@@ -12,6 +12,8 @@ added background image
 
 added demo link
 
+added logo image at startup
+
 TODO: 
 
    change listbox into individual buttons (blue w/ pokemon font text)

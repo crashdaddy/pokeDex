@@ -65,7 +65,7 @@ const getPokemonByType = (typeURL) => {
     document.getElementById("output").innerHTML="";
   } else {
     document.body.style.backgroundImage="none";
-    document.body.style.backgroundColor="#e6e6e6";
+    document.body.style.backgroundColor="#b9c0f0";
     fetch(typeURL)
       .then(res => res.json())
       .then(pokemonType => {
