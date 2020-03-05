@@ -70,6 +70,9 @@ const showEvolution = (speciesUrl) => {
 }
 
 const getPokemonByType = (typeURL) => {
+  if (typeURL==="default") {
+    document.getElementById("output").innerHTML=`<img src="img/PSMD_poster.png">`;
+  } else {
     fetch(typeURL)
       .then(res => res.json())
       .then(pokemonType => {
@@ -82,6 +85,7 @@ const getPokemonByType = (typeURL) => {
       .catch((error) => {
         console.error('Error:', error);
       });
+    }
   }
 
   const changeSprite = (id) => {
@@ -110,11 +114,11 @@ const getPokemonByType = (typeURL) => {
     let moveText    = document.getElementById("moveText");
     let smallPixHTML= "";
     let detailsText = document.getElementById("detailsText");
-    let detailsHTML = `<span style="font-size:24px;">Abilities</span><br/>`;
+    let detailsHTML = `<span style="font-size:24px;font-family:pokemonSolid;">Abilities</span><br/>`;
     moveText.innerHTML = "";
     detailsDiv.scrollTop = 0;
 
-    bigPicture.innerHTML=`<img src="https://pokeres.bastionbot.org/images/pokemon/${id}.png"  onerror="this.onerror=null; this.src='noImg.png';" style="max-height:350px;">`;
+    bigPicture.innerHTML=`<img src="https://pokeres.bastionbot.org/images/pokemon/${id}.png"  onerror="this.onerror=null; this.src='img/noImg.png';" style="max-height:350px;">`;
 
     let currentPokemon;
 
@@ -144,7 +148,7 @@ const getPokemonByType = (typeURL) => {
         })
       })
 
-    detailsHTML += `<p><span style="font-size:24px;">Moves</span><br/><div>`;
+    detailsHTML += `<p><span style="font-size:24px;font-family:pokemonSolid;">Moves</span><br/><div>`;
 
     currentPokemon.moves.forEach(function(move){
       Object.entries(move).forEach(function(detail){
