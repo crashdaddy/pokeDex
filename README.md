@@ -1,5 +1,7 @@
 # pokeDex
 
+Live Demo: https://www.crazyhappyfuntime.com/pokeDex/
+
 Making a Pokemon Pokedex using the pokeAPI (https://pokeapi.co/)
 
 Using fetch chaining to retrieve data from nested endpoints.
@@ -7,6 +9,8 @@ Using fetch chaining to retrieve data from nested endpoints.
 Added gradients to output containers
 
 added background image
+
+added demo link
 
 TODO: 
 
