@@ -72,18 +72,18 @@ const showEvolution = (speciesUrl) => {
         document.getElementById("evolution").innerHTML="";
         pokemonCollection.forEach(function(pokemon) {
           if (pokemon.name===evChain.chain.species.name) {
-              poke1 = `<img title="${evChain.chain.species.name}" src="${pokemon.sprites.front_default}">`;
+              poke1 = `<img onclick="showDetails(${pokemon.id})" title="${evChain.chain.species.name}" src="${pokemon.sprites.front_default}">`;
           }
           if (evChain.chain.evolves_to[0]){
           if (pokemon.name===evChain.chain.evolves_to[0].species.name) {
-              poke2 = `<img title="${evChain.chain.evolves_to[0].species.name}" src="${pokemon.sprites.front_default}">`;
+              poke2 = `<img onclick="showDetails(${pokemon.id})" title="${evChain.chain.evolves_to[0].species.name}" src="${pokemon.sprites.front_default}">`;
           }
           }
           if (evChain.chain.evolves_to){
           Object.values(evChain.chain.evolves_to).forEach(function(secondEv) {
             if(secondEv.evolves_to[0]){
              if (secondEv.evolves_to[0].species.name && pokemon.name===secondEv.evolves_to[0].species.name) {
-              poke3 = `<img title="${secondEv.evolves_to[0].species.name}" src="${pokemon.sprites.front_default}">`;
+              poke3 = `<img onclick="showDetails(${pokemon.id})" title="${secondEv.evolves_to[0].species.name}" src="${pokemon.sprites.front_default}">`;
             }          
           }
           })
@@ -104,11 +104,7 @@ const showEvolution = (speciesUrl) => {
 // by the buttons on the nav panel on the left side
 //
 const getPokemonByType = (typeURL) => {
-  if (typeURL==="default") {
-    document.body.style.backgroundColor= "none";
-    document.body.style.backgroundImage = "url(img/bg.png)";
-    document.getElementById("output").innerHTML="";
-  } else {
+
     document.body.style.backgroundImage="none";
     document.body.style.backgroundColor="#b9c0f0";
     fetch(typeURL)
@@ -123,7 +119,7 @@ const getPokemonByType = (typeURL) => {
       .catch((error) => {
         console.error('Error:', error);
       });
-    }
+    
   }
 
 //
@@ -143,7 +139,7 @@ const getPokemonByType = (typeURL) => {
     .then(res => res.json())
     .then(moveResults => {
       let moveHTML = "";
-      moveHTML += `${moveResults.name}: ${moveResults.flavor_text_entries[2].flavor_text}`;
+      moveHTML += `${moveResults.name}: ${moveResults.effect_entries[0].effect}`;//flavor_text_entries[2].flavor_text}
       document.getElementById("moveText").innerHTML = moveHTML;
     })
     .catch((error) => {
@@ -165,52 +161,72 @@ const getPokemonByType = (typeURL) => {
     let moveText     = document.getElementById("moveText");
     let movesList    = document.getElementById("movesList");
     let abilitiesList= document.getElementById("abilitiesList");
+    let typesDiv     = document.getElementById("types");
+    
+    let smallPixHTML = "";
+    let abilitiesHTML= "";
+    let movesHTML    = "";
+    let typesHTML    = "Type(s): ";  
 
-    let smallPixHTML= "";
-    let detailsText = document.getElementById("detailsText");
-    let detailsHTML = ``;
+    let currentPokemon;
 
+    // clear out the moves from the last entry
     moveText.innerHTML = "";
+
+    // move the details panel to the top 
+    // so the picture's the first thing showing
     detailsDiv.scrollTop = 0;
 
     bigPicture.innerHTML=`<img src="https://pokeres.bastionbot.org/images/pokemon/${id}.png"  onerror="this.onerror=null; this.src='img/noImg.png';" style="max-height:350px;">`;
 
-    let currentPokemon;
 
+    // Get the object for the pokemon we're wanting to display
     for(let i=0;i<pokemonCollection.length;i++) {
       if (pokemonCollection[i].id===id) {
         currentPokemon=pokemonCollection[i];
       }
     }
 
+    // print the pokemon's name at the top
     nameDiv.innerHTML = currentPokemon.name;
 
+    // list whatever types the pokemon is
+    // because some can be more than one type
+    for (let i=0;i<currentPokemon.types.length;i++) {
+      typesHTML+=`<div style="display:inline;"> ${currentPokemon.types[i].type.name} </div>`;
+    }
+    // display the pokemon's type(s)
+    typesDiv.innerHTML = typesHTML;
+
+    // get the sprites from the pokemon object for the 
+    // different angle picture to display below the big picture
     Object.values(currentPokemon.sprites).forEach(function(sprite) {
       if(sprite) {
+      // add a click listener so if the user clicks a small
+      // picture it will replace the big picture
       smallPixHTML += `<div id="img${currentPokemon.id}${getRandomInt(1,40)}}" onclick="changeSprite(this.id)" style="float:left;max-height:50px;margin:14px;"><img id="img${currentPokemon.id}" src="${sprite}" style="width:100%;height:100%;"></div>`;
       }
     })
+    // display the small pix
     smallPix.innerHTML=smallPixHTML;
 
-    let abilitiesHTML = "";
-
+    // loop through and get all the pokemon's abilities if there are any
+    // these are nested pretty deep in the JSON 
     currentPokemon.abilities.forEach(function(ability){
       Object.entries(ability).forEach(function(detail){
         
           detail.forEach(function(abilityType) {
             if (typeof abilityType === "object") {
-            abilitiesHTML += `<br/>${abilityType.name}`;
+                  abilitiesHTML += `<div style="float:left;margin:4px;" onclick="showMove('${abilityType.url}')">${abilityType.name}</div>`;
             }
           })
         })
       })
 
-    let movesHTML = "";
-
+    // do the same thing for their moves, also deeply nested in the JSON 
     currentPokemon.moves.forEach(function(move){
       Object.entries(move).forEach(function(detail){
-        
-          detail.forEach(function(moveType) {
+        detail.forEach(function(moveType) {
             if (typeof moveType === "object") {
               if (moveType.name) {
                    movesHTML+= `<div style="float:left;margin:4px;" onclick="showMove('${moveType.url}')">${moveType.name}</div>`;
@@ -221,12 +237,9 @@ const getPokemonByType = (typeURL) => {
       })
 
       showEvolution(currentPokemon.species.url);
-
-      detailsHTML +=  `</div><div style="clear:both;font-size:24px;margin-top:20px;font-family:pokemonSolid;">Evolution Chain:</div>`;
     
     abilitiesList.innerHTML = abilitiesHTML;
     movesList.innerHTML     = movesHTML;
-    detailsText.innerHTML   = detailsHTML;
 }
 
 //
@@ -252,18 +265,18 @@ const fetchPokemonData = (pokemon) => {
 //  This function adds a button for every different pokemon type
 //  that when clicked will summon all pokemon of that type
 //   
-const addButton = (pokemon) => {
+const addButton = (pokemonType) => {
   let select = document.getElementById("buttons");
   let button = document.createElement("button");
   button.className = "button";
-  button.innerHTML = `${pokemon.name}`;
+  button.innerHTML = `${pokemonType.name}`;
   select.append(button);
   button.addEventListener ("click", function(){
     this.parentElement.querySelectorAll( ".clicked" ).forEach( e =>
      { e.classList.remove( "clicked" ) 
        e.classList.add("button")});
     this.className="clicked";
-    getPokemonByType(pokemon.url)});
+    getPokemonByType(pokemonType.url)});
 }
   
 //

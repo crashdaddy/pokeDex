@@ -152,15 +152,18 @@ background: radial-gradient(circle, rgba(175,198,232,1) 4%, rgba(212,221,236,1) 
    color: black;
 }
 
-#abilitiesTitle, #movesTitle {
+#abilitiesTitle, #movesTitle, #evolutionTitle {
     font-size:24px;
     font-family:pokemonSolid;
     color: black;
     
 }
 
-#abilityText, #moveText {
+#moveText {
+    width: 96%;
+    display: inline-block;
     padding: 4px;
+    margin-top:4px;
     margin-right: 10px;
     background: rgb(246,135,7);
     background: radial-gradient(circle, rgba(246,135,7,1) 4%, rgba(255,145,0,1) 47%, rgba(232,97,12,1) 85%);

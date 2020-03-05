@@ -16,6 +16,10 @@ added logo image at startup
 
 separated stylesheet from index page, moved logo to details panel
 
+Added Types to details panel, added ability and move details
+
+added click function to Evolution Chains
+
 TODO: 
 
    change listbox into individual buttons (blue w/ pokemon font text)
@@ -28,7 +32,8 @@ TODO:
 
    break detailsDiv into separate output containers
 
-        -- started. Already did Abilities and Moves
+        -- DONE. Added Abilities and Moves to the same output div between the
+        two sections
 
    move moves closer to moves
 
