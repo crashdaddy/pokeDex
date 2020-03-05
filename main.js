@@ -7,20 +7,12 @@ const getRandomInt = (min, max) => {
   return min + Math.floor(Math.random() * (max - min + 1));
 }
 
-const showEnemies = () => {
-    let outPutString = "";
-    for (let i=0;i<enemies.length;i++) {
-        outPutString+= `<div style="float:left;"><img src="${enemies[i].imgURL}" style="max-height:96px"><br>ID: ${enemies[i].id} <br/>${enemies[i].name} <br/>Hitpoints: ${enemies[i].hp}<br/></div>`;
-    }
-    document.getElementById("output").innerHTML=outPutString;
-}
-
 const getAllTypes = () => {
   fetch('https://pokeapi.co/api/v2/type')
     .then(res=> res.json())
     .then(pokemonType => {
         pokemonType.results.forEach(function(typeOfPokemon){
-        loadSelectBox(typeOfPokemon)
+        addButton(typeOfPokemon)
     })
   })
 }
@@ -166,7 +158,7 @@ const getPokemonByType = (typeURL) => {
 
       showEvolution(currentPokemon.species.url);
 
-      detailsHTML +=  `</div><div style="clear:both;font-size:24px;margin-top:20px;font-family:pokemonSolid;">Evolutions:</div>`;
+      detailsHTML +=  `</div><div style="clear:both;font-size:24px;margin-top:20px;font-family:pokemonSolid;">Evolution Chain:</div>`;
  
     detailsText.innerHTML = detailsHTML;
   }
@@ -180,14 +172,23 @@ const fetchPokemonData = (pokemon) => {
     {   
         pokemonCollection.push(pokeData);
         if(pokeData.sprites.front_default){
-        HTMLstr += `<div id="${pokeData.id}" onclick="showDetails(${pokeData.id})" style="float:left;"><img src="${pokeData.sprites.front_default}" style="max-height:96px;"></div>`;
+        HTMLstr += `<div class="pokeDex" id="${pokeData.id}" onclick="showDetails(${pokeData.id})" style="float:left;"><img src="${pokeData.sprites.front_default}" style="max-height:96px;"></div>`;
         }
       document.getElementById("output").innerHTML=HTMLstr;
   })}
     
-const loadSelectBox = (pokemon) => {
-  let select = document.getElementById("selectBox");
-      select.append(new Option(pokemon.name, pokemon.url));
+const addButton = (pokemon) => {
+  let select = document.getElementById("buttons");
+  let button = document.createElement("button");
+  button.className = "button";
+  button.innerHTML = `${pokemon.name}`;
+  select.append(button);
+  button.addEventListener ("click", function(){
+    this.parentElement.querySelectorAll( ".clicked" ).forEach( e =>
+     { e.classList.remove( "clicked" ) 
+       e.classList.add("button")});
+    this.className="clicked";
+    getPokemonByType(pokemon.url)});
 }
   
 window.onload = () => {

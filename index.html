@@ -7,9 +7,15 @@
     src: url(includes/pokemonSolid.ttf);
 }
 
+@font-face {
+    font-family: montserrat;
+    src: url(includes/Montserrat-Regular.otf);
+}
+
 body {
     background-image: url(img/bg.png);
     background-size: cover;
+    font-family: montserrat;
 }
 
 #nav {
@@ -35,6 +41,14 @@ body {
     padding-left: 10px;
     background: rgb(175,198,232);
 background: radial-gradient(circle, rgba(175,198,232,1) 4%, rgba(212,221,236,1) 49%, rgba(174,181,242,1) 91%); 
+}
+
+.pokeDex {
+    float: left;
+}
+
+.pokeDex:hover {
+    background-color: rgba(0,133,255,.5);
 }
 
 #details {
@@ -87,14 +101,64 @@ background: radial-gradient(circle, rgba(175,198,232,1) 4%, rgba(212,221,236,1) 
     height:350px;
     width: 350px;
 }
+
+.button {
+   border-top: 1px solid #059fff;
+   background: #d66574;
+   background: -webkit-gradient(linear, left top, left bottom, from(#f70519), to(#d66574));
+   background: -webkit-linear-gradient(top, #f70519, #d66574);
+   background: -moz-linear-gradient(top, #f70519, #d66574);
+   background: -ms-linear-gradient(top, #f70519, #d66574);
+   background: -o-linear-gradient(top, #f70519, #d66574);
+   padding: 1px 10px;
+   -webkit-border-radius: 7px;
+   -moz-border-radius: 7px;
+   border-radius: 7px;
+   -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   box-shadow: rgba(0,0,0,1) 0 1px 0;
+   text-shadow: rgba(0,0,0,.4) 0 1px 0;
+   color: #fcef00;
+   font-size: 15px;
+   width: 100%;
+   font-family: montserrat;
+   text-decoration: none;
+   vertical-align: middle;
+   }
+.button:hover {
+   border-top-color: #0509ff;
+   background: #0509ff;
+   color: #ffffff;
+   }
+.button:active {
+   border-top-color: #846ffc;
+   background: #846ffc;
+   }
+.clicked {
+    border-top: 1px solid #059fff;
+   padding: 1px 10px;
+   -webkit-border-radius: 7px;
+   -moz-border-radius: 7px;
+   border-radius: 7px;
+   -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   box-shadow: rgba(0,0,0,1) 0 1px 0;
+   text-shadow: rgba(0,0,0,.4) 0 1px 0;
+   font-size: 15px;
+   width: 100%;
+   font-family: montserrat;
+   text-decoration: none;
+   vertical-align: middle;
+   background: #e6e6e6;
+   color: black;
+}
 </style>
 </head>
 <body>
     <div id="nav">
         <img src="img/ashSprite.gif">
-        <select id="selectBox" style="width: 100%;" onchange="getPokemonByType(this.value)">
-        <option value="default">Select a Type:</option>
-        </select>
+        <div style="font-family: pokemonSolid;width:100%;margin-bottom: 10px;text-align: center;">Pokemon Type</div>
+        <div id="buttons"></div>
     </div>
     <div id="output"></div>
     <div id="details">
