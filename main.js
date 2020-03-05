@@ -1,12 +1,49 @@
+///////////////////////////////////////////////////////////////
+//                                                           //
+//                    Pokemon: Pokedex                       //
+//              an adventure in fetch-chaining               //
+//                 fun for the whole family!                 //
+//                                                           //
+//                                                           //
+///////////////////////////////////////////////////////////////
 
+
+///////////////////////////////////////
+//
+//  Global Variables
+//
+
+// When we load the images for the pokemon when we select a pokemon 
+// type, just save ALL the pokemon data in an array of objects
+// so the data's available without having to re-fetch it each time
 let pokemonCollection = [];
 
+// this is the string that's used to build output during the fetch calls
 let HTMLstr = "";
 
+///////////////////////////////////////
+//
+//   Helper Functions
+//
+
+// provide a random number between
+// a certain range (min-max)
 const getRandomInt = (min, max) => {
   return min + Math.floor(Math.random() * (max - min + 1));
 }
 
+//////////////////////////////////
+//
+//  Fetch functions
+//  calls to the different API
+//  endpoints to retrieve and process
+//  the data we'll be using
+
+//
+//  Get all the different "types" of Pokemon
+//  and make a button out of each type
+//  to filter the data
+//
 const getAllTypes = () => {
   fetch('https://pokeapi.co/api/v2/type')
     .then(res=> res.json())
@@ -17,6 +54,10 @@ const getAllTypes = () => {
   })
 }
 
+//
+//  Show the evolution chain (at the bottom of the details panel)
+//  of the current selected Pokemon
+//
 const showEvolution = (speciesUrl) => {
   fetch(speciesUrl)
     .then(res => res.json())
@@ -58,6 +99,10 @@ const showEvolution = (speciesUrl) => {
 })
 }
 
+//
+// Returns all the Pokemon of a certain type specified
+// by the buttons on the nav panel on the left side
+//
 const getPokemonByType = (typeURL) => {
   if (typeURL==="default") {
     document.body.style.backgroundColor= "none";
@@ -81,10 +126,18 @@ const getPokemonByType = (typeURL) => {
     }
   }
 
+//
+// when the user clicks the small pictures in the details panel
+// they replace the big picture at the top
+//
   const changeSprite = (id) => {
     document.getElementById("bigPicture").innerHTML=document.getElementById(id).innerHTML;
   }
 
+//
+// when the user clicks one of the "moves" in the list on the details
+// panel this posts the specific details of that move into its own box
+//
   const showMove = (moveUrl) => {
     fetch(moveUrl)
     .then(res => res.json())
@@ -98,16 +151,25 @@ const getPokemonByType = (typeURL) => {
     })
   }
 
+//
+// This function goes through the array we made to hold the pokemonCollection
+// and gets all the specific info about the currently selected pokemon,
+// parses it, then displays it to the details panel
+//
   const showDetails = (id) => {
 
-    let detailsDiv  = document.getElementById("details");
-    let nameDiv     = document.getElementById("name");
-    let bigPicture  = document.getElementById("bigPicture");
-    let smallPix    = document.getElementById("smallPix");
-    let moveText    = document.getElementById("moveText");
+    let detailsDiv   = document.getElementById("details");
+    let nameDiv      = document.getElementById("name");
+    let bigPicture   = document.getElementById("bigPicture");
+    let smallPix     = document.getElementById("smallPix");
+    let moveText     = document.getElementById("moveText");
+    let movesList    = document.getElementById("movesList");
+    let abilitiesList= document.getElementById("abilitiesList");
+
     let smallPixHTML= "";
     let detailsText = document.getElementById("detailsText");
-    let detailsHTML = `<span style="font-size:24px;font-family:pokemonSolid;">Abilities</span><br/>`;
+    let detailsHTML = ``;
+
     moveText.innerHTML = "";
     detailsDiv.scrollTop = 0;
 
@@ -130,18 +192,20 @@ const getPokemonByType = (typeURL) => {
     })
     smallPix.innerHTML=smallPixHTML;
 
+    let abilitiesHTML = "";
+
     currentPokemon.abilities.forEach(function(ability){
       Object.entries(ability).forEach(function(detail){
         
           detail.forEach(function(abilityType) {
             if (typeof abilityType === "object") {
-            detailsHTML+= `<br/>${abilityType.name}`;
+            abilitiesHTML += `<br/>${abilityType.name}`;
             }
           })
         })
       })
 
-    detailsHTML += `<p><span style="font-size:24px;font-family:pokemonSolid;">Moves</span><br/><div>`;
+    let movesHTML = "";
 
     currentPokemon.moves.forEach(function(move){
       Object.entries(move).forEach(function(detail){
@@ -149,7 +213,7 @@ const getPokemonByType = (typeURL) => {
           detail.forEach(function(moveType) {
             if (typeof moveType === "object") {
               if (moveType.name) {
-                   detailsHTML+= `<div style="float:left;margin:4px;" onclick="showMove('${moveType.url}')">${moveType.name}</div>`;
+                   movesHTML+= `<div style="float:left;margin:4px;" onclick="showMove('${moveType.url}')">${moveType.name}</div>`;
               }
             }
           })
@@ -159,10 +223,17 @@ const getPokemonByType = (typeURL) => {
       showEvolution(currentPokemon.species.url);
 
       detailsHTML +=  `</div><div style="clear:both;font-size:24px;margin-top:20px;font-family:pokemonSolid;">Evolution Chain:</div>`;
- 
-    detailsText.innerHTML = detailsHTML;
-  }
+    
+    abilitiesList.innerHTML = abilitiesHTML;
+    movesList.innerHTML     = movesHTML;
+    detailsText.innerHTML   = detailsHTML;
+}
 
+//
+// This routine calls each pokemon of the selected type,
+// saves its information into the pokemonCollection array
+// and outputs its picture to the main output in the center
+//
 const fetchPokemonData = (pokemon) => {
     let url = pokemon // <--- this is saving the pokemon url to a      
     //variable to us in a fetch.(Ex: https://pokeapi.co/api/v2/pokemon/1/)  
@@ -176,7 +247,11 @@ const fetchPokemonData = (pokemon) => {
         }
       document.getElementById("output").innerHTML=HTMLstr;
   })}
-    
+
+//
+//  This function adds a button for every different pokemon type
+//  that when clicked will summon all pokemon of that type
+//   
 const addButton = (pokemon) => {
   let select = document.getElementById("buttons");
   let button = document.createElement("button");
@@ -191,6 +266,10 @@ const addButton = (pokemon) => {
     getPokemonByType(pokemon.url)});
 }
   
+//
+//  We start out by selecting the different "type"s of pokemon
+//  so we can instantiate the buttons on the left panel
+//
 window.onload = () => {
     getAllTypes();
 }

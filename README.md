@@ -14,6 +14,8 @@ added demo link
 
 added logo image at startup
 
+separated stylesheet from index page, moved logo to details panel
+
 TODO: 
 
    change listbox into individual buttons (blue w/ pokemon font text)
@@ -26,12 +28,18 @@ TODO:
 
    break detailsDiv into separate output containers
 
+        -- started. Already did Abilities and Moves
+
    move moves closer to moves
 
         -- so when you click on a "move" its details will be adjacent
+
+        Done. It's now right below the "Moves" title
 
    add details to "abilities"
 
    add highlight effect to main group of pokemon images when clicked
 
         -- DONE. Added a hover background of lightblue
+
+   add move effects and power to the move details
