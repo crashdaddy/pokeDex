@@ -18,7 +18,11 @@ separated stylesheet from index page, moved logo to details panel
 
 Added Types to details panel, added ability and move details
 
+     -- replaced "$effect_chance" in details with actual value from API call
+
 added click function to Evolution Chains
+
+added stats to details panel, added type stats to selected pokemon type
 
 TODO: 
 

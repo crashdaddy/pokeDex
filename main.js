@@ -99,6 +99,52 @@ const showEvolution = (speciesUrl) => {
 })
 }
 
+const showTypeMove = (moveUrl) => {
+  fetch(moveUrl)
+  .then(res => res.json())
+  .then(moveResults => {
+    let moveHTML = "";
+    let insertHP = moveResults.effect_entries[0].effect;
+    if (moveResults.effect_chance) insertHP = moveResults.effect_entries[0].effect.replace("$effect_chance",moveResults.effect_chance.toString());
+    moveHTML += `${moveResults.name}: ${insertHP}`;
+
+    if (moveResults.accuracy) {
+      moveHTML += `<div style="color:blue;"><br/>Accuracy: ${moveResults.accuracy}% <br/>Damage Class: ${moveResults.damage_class.name}  <br/>Target: ${moveResults.target.name}<br/></div>`;
+    }
+    document.getElementById("pokemonTypeMoveText").innerHTML = moveHTML;
+  })
+  .catch((error) => {
+    console.log('Error: ',error);
+  })
+}
+
+const showPokemonTypeDetails = (pokemonType) => {
+      HTMLstr += `<div style="margin-bottom:10px;display:inline-block;"><div style="border-right:1px solid black;float:left;width:30%;margin-top:10px;display:inline-block;text-align:left;overflow-wrap:break-word;">
+                <span style="float:left;font-size:24px;line-height:24px;font-family:pokemonSolid;">Damage Relations</span><p/><br/>
+                <div style="font-size:10px;">`;
+
+      for (let [key, value] of Object.entries(pokemonType.damage_relations)) {
+        if(Array.isArray(value)) {
+          HTMLstr += `<b>${key}</b> types =>  `;
+          for(let i =0;i<value.length;i++){
+            HTMLstr += `${value[i].name.toString()}  `;
+      }
+          HTMLstr += `<br/>`;
+      } else  HTMLstr += `${key}: ${value}`;
+      }
+      HTMLstr += `</div></div>`;
+      HTMLstr += `<div style="padding-left:4px;float:left;width:68%;margin-top:10px;display:inline-block;text-align:left;overflow-wrap:break-word;">
+                  <span style="float:left;font-size:24px;line-height:24px;font-family:pokemonSolid;">Moves</span><p/><br/>
+                  <div style="font-size:10px;padding-right:14px;">`;
+
+      for (let i=0; i<pokemonType.moves.length;i++){
+          HTMLstr += `<div style="float:left;margin:4px;" onclick="showTypeMove('${pokemonType.moves[i].url}')">${pokemonType.moves[i].name} </div>`;
+      }
+      HTMLstr += `</div></div></div>`;
+      HTMLstr += `<div id="pokemonTypeMoveText"></div>`
+      document.getElementById("output").innerHTML += HTMLstr
+}
+
 //
 // Returns all the Pokemon of a certain type specified
 // by the buttons on the nav panel on the left side
@@ -115,6 +161,7 @@ const getPokemonByType = (typeURL) => {
                 pokemonType.pokemon.forEach(function(pokemon){    
                   fetchPokemonData(pokemon.pokemon.url);   
                 })
+                showPokemonTypeDetails(pokemonType);                
       })
       .catch((error) => {
         console.error('Error:', error);
@@ -139,7 +186,13 @@ const getPokemonByType = (typeURL) => {
     .then(res => res.json())
     .then(moveResults => {
       let moveHTML = "";
-      moveHTML += `${moveResults.name}: ${moveResults.effect_entries[0].effect}`;//flavor_text_entries[2].flavor_text}
+      let insertHP = moveResults.effect_entries[0].effect;
+      if (moveResults.effect_chance) insertHP = moveResults.effect_entries[0].effect.replace("$effect_chance",moveResults.effect_chance.toString());
+      moveHTML += `${moveResults.name}: ${insertHP}`;
+
+      if (moveResults.accuracy) {
+        moveHTML += `<div style="color:blue;"><br/>Accuracy: ${moveResults.accuracy}% <br/>Damage Class: ${moveResults.damage_class.name}  <br/>Target: ${moveResults.target.name}<br/></div>`;
+      }
       document.getElementById("moveText").innerHTML = moveHTML;
     })
     .catch((error) => {
@@ -162,10 +215,12 @@ const getPokemonByType = (typeURL) => {
     let movesList    = document.getElementById("movesList");
     let abilitiesList= document.getElementById("abilitiesList");
     let typesDiv     = document.getElementById("types");
+    let hitpointsDiv = document.getElementById("hitpointsDiv");
     
     let smallPixHTML = "";
     let abilitiesHTML= "";
     let movesHTML    = "";
+    let statsHTML    = "";
     let typesHTML    = "Type(s): ";  
 
     let currentPokemon;
@@ -177,9 +232,6 @@ const getPokemonByType = (typeURL) => {
     // so the picture's the first thing showing
     detailsDiv.scrollTop = 0;
 
-    bigPicture.innerHTML=`<img src="https://pokeres.bastionbot.org/images/pokemon/${id}.png"  onerror="this.onerror=null; this.src='img/noImg.png';" style="max-height:350px;">`;
-
-
     // Get the object for the pokemon we're wanting to display
     for(let i=0;i<pokemonCollection.length;i++) {
       if (pokemonCollection[i].id===id) {
@@ -189,7 +241,20 @@ const getPokemonByType = (typeURL) => {
 
     // print the pokemon's name at the top
     nameDiv.innerHTML = currentPokemon.name;
+    // show the big picture
+    bigPicture.innerHTML=`<img src="https://pokeres.bastionbot.org/images/pokemon/${id}.png"  onerror="this.onerror=null; this.src='img/noImg.png';" style="max-height:350px;">`;
 
+    // output hitpoints
+    if (currentPokemon.stats[5]) {
+      for(let statCounter =0;statCounter<currentPokemon.stats.length;statCounter++){
+      statsHTML += `<div style="width:16%;float:left;">
+                  <div style="vertical-align:top;display:inline-block;width:100%;font-size:10px;height:30px;">${currentPokemon.stats[statCounter].stat.name}</div><div style="font-size:20px;"> ${currentPokemon.stats[statCounter].base_stat}</div>
+                  </div>`;
+      }
+    }
+    hitpointsDiv.innerHTML = statsHTML;
+    
+    
     // list whatever types the pokemon is
     // because some can be more than one type
     for (let i=0;i<currentPokemon.types.length;i++) {
