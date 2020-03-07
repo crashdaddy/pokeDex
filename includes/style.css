@@ -8,11 +8,14 @@
     src: url(../includes/Montserrat-Regular.otf);
 }
 
+
+
 body {
     background-image: url(../img/bg.png);
     background-color: #b9c0f0;
     background-size: cover;
     font-family: montserrat;
+    cursor: url(../img/pokeBall.png) 15 15, auto;
 }
 
 #nav {
