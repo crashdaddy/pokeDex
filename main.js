@@ -145,12 +145,25 @@ const showPokemonTypeDetails = (pokemonType) => {
       document.getElementById("output").innerHTML += HTMLstr
 }
 
+const clearDetailsPanel = () => {
+  
+  document.getElementById("name").innerHTML         ="";
+  document.getElementById("bigPicture").innerHTML   =`<img src="img/Pokemon.png" style="max-width: 100%;"></img>`;
+  document.getElementById("smallPix").innerHTML     ="";
+  document.getElementById("moveText").innerHTML     ="";
+  document.getElementById("movesList").innerHTML    ="";
+  document.getElementById("abilitiesList").innerHTML="";
+  document.getElementById("types").innerHTML        ="";
+  document.getElementById("hitpointsDiv").innerHTML ="";
+  document.getElementById("evolution").innerHTML    ="";
+}
+
 //
 // Returns all the Pokemon of a certain type specified
 // by the buttons on the nav panel on the left side
 //
 const getPokemonByType = (typeURL) => {
-
+    clearDetailsPanel();
     document.body.style.backgroundImage="none";
     document.body.style.backgroundColor="#b9c0f0";
     fetch(typeURL)
