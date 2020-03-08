@@ -92,6 +92,8 @@ const showEvolution = (speciesUrl) => {
 
           evHTML = `${poke1}${poke2}${poke3}`;
           document.getElementById("evolution").innerHTML=evHTML;
+
+          document.getElementById("habitat").innerHTML=species.habitat.name;
       })
       .catch((error) => {
         console.error('Error:', error);
@@ -156,6 +158,8 @@ const clearDetailsPanel = () => {
   document.getElementById("types").innerHTML        ="";
   document.getElementById("hitpointsDiv").innerHTML ="";
   document.getElementById("evolution").innerHTML    ="";
+  document.getElementById("habitat").innerHTML      ="";
+  document.getElementById("details").scrollTop      = 0;
 }
 
 //
@@ -261,11 +265,13 @@ const getPokemonByType = (typeURL) => {
     if (currentPokemon.stats[5]) {
       for(let statCounter =0;statCounter<currentPokemon.stats.length;statCounter++){
       statsHTML += `<div style="width:16%;float:left;">
-                  <div style="vertical-align:top;display:inline-block;width:100%;font-size:10px;height:30px;">${currentPokemon.stats[statCounter].stat.name}</div><div style="font-size:20px;"> ${currentPokemon.stats[statCounter].base_stat}</div>
+                  <div style="vertical-align:top;display:inline-block;width:100%;font-size:10px;height:30px;">${currentPokemon.stats[statCounter].stat.name}</div>
+                  <div style="font-size:20px;"> ${currentPokemon.stats[statCounter].base_stat}</div>
                   </div>`;
       }
     }
     hitpointsDiv.innerHTML = statsHTML;
+    hitpointsDiv.innerHTML+= `<div style="width:100%;font-size:10px;text-align:left;">Base Experience: ${currentPokemon.base_experience}</div>`;
     
     
     // list whatever types the pokemon is
