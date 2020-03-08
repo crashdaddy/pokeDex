@@ -156,14 +156,14 @@ background: radial-gradient(circle, rgba(175,198,232,1) 4%, rgba(212,221,236,1) 
    color: black;
 }
 
-#abilitiesTitle, #movesTitle, #evolutionTitle, #habitatTitle {
+#abilitiesTitle, #movesTitle, #evolutionTitle, #habitatTitle, #heldItemsTitle {
     font-size:24px;
     font-family:pokemonSolid;
     color: black;
     
 }
 
-#moveText, #pokemonTypeMoveText {
+#moveText, #pokemonTypeMoveText, #itemText {
     width: 96%;
     padding: 4px;
     margin-top:30px;

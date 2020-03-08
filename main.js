@@ -159,6 +159,8 @@ const clearDetailsPanel = () => {
   document.getElementById("hitpointsDiv").innerHTML ="";
   document.getElementById("evolution").innerHTML    ="";
   document.getElementById("habitat").innerHTML      ="";
+  document.getElementById("itemText").innerHTML     ="";
+  document.getElementById("heldItems").innerHTML    ="";
   document.getElementById("details").scrollTop      = 0;
 }
 
@@ -218,6 +220,29 @@ const getPokemonByType = (typeURL) => {
   }
 
 //
+// This posts the specific details of each pokemon's "held items"
+// when the user clicks on them
+//
+const showItems = (itemUrl) => {
+  fetch(itemUrl)
+  .then(res => res.json())
+  .then(itemResults => {
+    let itemHTML = "";
+    let costStr  = "unknown";
+
+    if (itemResults.cost) costStr = itemResults.cost;
+
+    itemHTML += `<img src="${itemResults.sprites.default}" style="float:left;"> ${itemResults.name}<br/>
+                <br/> ${itemResults.effect_entries[0].effect}<br/>
+                <br/>Cost: ${itemResults.cost}<br/>  
+                <br/>Details: ${itemResults.effect_entries[0].short_effect}<br/>`;
+
+    document.getElementById("itemText").innerHTML = itemHTML;
+  })
+}
+
+
+//
 // This function goes through the array we made to hold the pokemonCollection
 // and gets all the specific info about the currently selected pokemon,
 // parses it, then displays it to the details panel
@@ -233,21 +258,26 @@ const getPokemonByType = (typeURL) => {
     let abilitiesList= document.getElementById("abilitiesList");
     let typesDiv     = document.getElementById("types");
     let hitpointsDiv = document.getElementById("hitpointsDiv");
+    let heldItemsDiv = document.getElementById("heldItems");
+    let itemTextDiv  = document.getElementById("itemText");
     
     let smallPixHTML = "";
     let abilitiesHTML= "";
     let movesHTML    = "";
     let statsHTML    = "";
+    let heldItemsHTML= "";
     let typesHTML    = "Type(s): ";  
 
     let currentPokemon;
 
     // clear out the moves from the last entry
-    moveText.innerHTML = "";
+    moveText.innerHTML    = "";
+    // and the items
+    itemTextDiv.innerHTML = "";
 
     // move the details panel to the top 
     // so the picture's the first thing showing
-    detailsDiv.scrollTop = 0;
+    detailsDiv.scrollTop  = 0;
 
     // Get the object for the pokemon we're wanting to display
     for(let i=0;i<pokemonCollection.length;i++) {
@@ -320,10 +350,17 @@ const getPokemonByType = (typeURL) => {
         })
       })
 
-      showEvolution(currentPokemon.species.url);
+    showEvolution(currentPokemon.species.url);
+
+    if (currentPokemon.held_items.length>0) {
+      for(let i=0;i<currentPokemon.held_items.length;i++){
+        heldItemsHTML += `<div style="float:left;margin:4px;" onclick="showItems('${currentPokemon.held_items[i].item.url}')">${currentPokemon.held_items[i].item.name}</div>`;
+      }
+    } else heldItemsHTML = `This pokemon has no items`;
     
     abilitiesList.innerHTML = abilitiesHTML;
     movesList.innerHTML     = movesHTML;
+    heldItemsDiv.innerHTML  = heldItemsHTML;
 }
 
 //
