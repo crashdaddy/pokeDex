@@ -108,10 +108,13 @@ const showTypeMove = (moveUrl) => {
     let moveHTML = "";
     let insertHP = moveResults.effect_entries[0].effect;
     if (moveResults.effect_chance) insertHP = moveResults.effect_entries[0].effect.replace("$effect_chance",moveResults.effect_chance.toString());
-    moveHTML += `${moveResults.name}: ${insertHP}`;
+    moveHTML += `<div style="width:100%;text-align:left;">${moveResults.name}: ${insertHP}</div>`;
 
     if (moveResults.accuracy) {
-      moveHTML += `<div style="color:blue;"><br/>Accuracy: ${moveResults.accuracy}% <br/>Damage Class: ${moveResults.damage_class.name}  <br/>Target: ${moveResults.target.name}<br/></div>`;
+      moveHTML += `<div style="color:blue;width:50%;float:left;display:inline-block;font-size:12px;"><br/>Accuracy: ${moveResults.accuracy}% <br/>Damage Class: ${moveResults.damage_class.name}  <br/>Target: ${moveResults.target.name}<br/></div>`;
+    }
+    if (moveResults.power) {
+      moveHTML += `<div style="font-size:12px;color:blue;width:50%;float:left;display:inline-block;"><br/>Power: ${moveResults.power}% <br/>PowerPoints: ${moveResults.pp}  <br/>Priority: ${moveResults.priority}<br/></div>`;
     }
     document.getElementById("pokemonTypeMoveText").innerHTML = moveHTML;
   })
@@ -143,7 +146,7 @@ const showPokemonTypeDetails = (pokemonType) => {
           HTMLstr += `<div style="float:left;margin:4px;" onclick="showTypeMove('${pokemonType.moves[i].url}')">${pokemonType.moves[i].name} </div>`;
       }
       HTMLstr += `</div></div></div>`;
-      HTMLstr += `<div id="pokemonTypeMoveText"></div>`
+      HTMLstr += `<div id="pokemonTypeMoveText" style="display:inline-block;"></div>`
       document.getElementById("output").innerHTML += HTMLstr
 }
 
@@ -210,7 +213,10 @@ const getPokemonByType = (typeURL) => {
       moveHTML += `${moveResults.name}: ${insertHP}`;
 
       if (moveResults.accuracy) {
-        moveHTML += `<div style="color:blue;"><br/>Accuracy: ${moveResults.accuracy}% <br/>Damage Class: ${moveResults.damage_class.name}  <br/>Target: ${moveResults.target.name}<br/></div>`;
+        moveHTML += `<div style="font-size:12px;color:blue;"><br/>Accuracy: ${moveResults.accuracy}% <br/>Damage Class: ${moveResults.damage_class.name}  <br/>Target: ${moveResults.target.name}<br/></div>`;
+      }
+      if (moveResults.power) {
+        moveHTML += `<div style="font-size:12px;color:blue;"><br/>Power: ${moveResults.power}% <br/>PowerPoints: ${moveResults.pp}  <br/>Priority: ${moveResults.priority}<br/></div>`;
       }
       document.getElementById("moveText").innerHTML = moveHTML;
     })
@@ -301,7 +307,7 @@ const showItems = (itemUrl) => {
       }
     }
     hitpointsDiv.innerHTML = statsHTML;
-    hitpointsDiv.innerHTML+= `<div style="width:100%;font-size:10px;text-align:left;">Base Experience: ${currentPokemon.base_experience}</div>`;
+    hitpointsDiv.innerHTML+= `<div style="width:100%;font-size:12px;text-align:left;">Base Experience: ${currentPokemon.base_experience}</div>`;
     
     
     // list whatever types the pokemon is
@@ -377,7 +383,7 @@ const fetchPokemonData = (pokemon) => {
     {   
         pokemonCollection.push(pokeData);
         if(pokeData.sprites.front_default){
-        HTMLstr += `<div class="pokeDex" id="${pokeData.id}" onclick="showDetails(${pokeData.id})" style="float:left;"><img src="${pokeData.sprites.front_default}" style="max-height:96px;"></div>`;
+        HTMLstr += `<div class="pokeDex" id="${pokeData.id}" onclick="showDetails(${pokeData.id})" style="float:left;border-radius:5%;" title="${pokeData.name}"><img src="${pokeData.sprites.front_default}" style="max-height:96px;"></div>`;
         }
       document.getElementById("output").innerHTML=HTMLstr;
   })}
